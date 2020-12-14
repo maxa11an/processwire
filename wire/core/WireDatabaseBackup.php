@@ -1154,6 +1154,8 @@ class WireDatabaseBackup {
 		$creates2 = $this->findCreateTables($filename2, $options); 
 		$creates = array_merge($creates1, $creates2); // CREATE TABLE statements in filename2 override those in filename1
 		$numErrors = 0;
+
+		$this->executeQuery("SET FOREIGN_KEY_CHECKS = 0;");
 		
 		foreach($creates as $table => $create) {
 			if($options['allowDrop']) {
@@ -1193,6 +1195,8 @@ class WireDatabaseBackup {
 				if(!$this->executeQuery($insert, $options)) $numErrors++;
 			}
 		}
+
+		$this->executeQuery("SET FOREIGN_KEY_CHECKS = 1;");
 		
 		return $numErrors === 0;
 	}
